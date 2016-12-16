@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Getting REST</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+<body>
+  <div class="style">
+  <div class="form-area">
+  <h4>Your post</h4>
+  <hr>
+  <form action="/" method="post" id="post-form" class="post-form">
+    <input type="text" name="name" placeholder="name"><br>
+    <input type="text" name="author" placeholder="author"><br>
+    <textarea name="text" placeholder="text"></textarea><br>
+    <button type="submit" id="on" class="save-btn">Save post</button>
+  </form>
+  </div>
+  <div class="posts"></div>
+
+<!-- <form action="/" method="post" id="edit-form">
+   <div><input type="text" name="name-edit" placeholder="name"></div>
+   <div><input type="text" name="author-edit" placeholder="author"></div>
+    <div><textarea name="text-edit" placeholder="text"></textarea></div>
+    <button type="submit" id="om">Save</button>
+</form> -->
+</div>
+<script>
+// Show all posts
+function showAllPosts() {
+  $.ajax({
+      url: "/api/topic",
+      type: "GET",
+      dataType : "json"
+  })
+  .done(function( json ) {
+    showPosts(json);
+  })
+  .fail(function( xhr, status, errorThrown ) {
+    alert( "Sorry, there was a problem!" );
+    console.log( "Error: " + errorThrown );
+    console.log( "Status: " + status );
+    console.dir( xhr );
+  })
+}
+
+function showPosts(posts) {
+  posts.forEach(function(post) {
+    create(post);
+  });
+};
+
+showAllPosts();
+
+function runRequestNativeWay() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("demo").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "ajax_info.txt", true);
+    xhttp.send();
+}
+
+//update posts
+//  $("#edit-form").submit(function(event){
+//     event.preventDefault();  
+//     var data = {
+//       name: $("#edit-form input[name=name-edit]").val(),
+//       author:  $("#edit-form input[name=author-edit]").val(),   
+//       text: $("#edit-form textarea[name=text-edit]").val(),
+//       date: "new Date"
+//       }
+//     $.ajax({
+//         url: "/api/topic/" + "AJAX",
+//         data: JSON.stringify(data),
+//         type: "PUT",
+//         contentType: "application/json; charset=utf-8",
+//         dataType : "json"
+//     })
+//     .done(function( json ) {
+//       console.log(json);
+//     })
+//     .fail(function( xhr, status, errorThrown ) {
+//       console.log( "Error: " + errorThrown );
+//       console.log( "Status: " + status );
+//       console.log("err");
+//       console.dir( xhr );
+//     })
+
+// });
+
+
+//show text
+
+function showText(wrapper) {
+   $.ajax({
+      url: "/api/topic/" + wrapper.find(':first-child').text(),
+      type: "GET",
+      dataType : "json"
+     
+    })
+    .done(function(json) {
+      $( "<div class=\"content\">").text( json.text ).appendTo(wrapper);
+    })
+}
+
+// delete post
+
+function deletePost(param) {
+  $.ajax({
+      url: "/api/topic/" + param.find(':first-child').text(),
+      type: "DELETE",  
+  })
+  .done(function( json ) {
+    param.remove();
+  })
+  .fail(function( xhr, status, errorThrown ) {
+      console.dir( xhr );
+  })
+}
+// create new post
+function create(post) {
+  var wrapp = $("<div>").appendTo($(".posts"));
+  var name = $("<h1>").text(post.name).appendTo(wrapp);
+  var author = $("<h2>").text(post.author).appendTo(wrapp);
+  var date = $("<h3>").text(post.date).appendTo(wrapp);
+  var show = $("<button type=\"button\">").text("Show more...").appendTo(wrapp);
+  var edit = $("<button type=\"button\">").text("Edit").appendTo(wrapp);
+  var del = $("<button type=\"button\">").text("Delete").appendTo(wrapp);
+
+  del.click(function() {
+     var wrapper = $(this).parent();
+     deletePost(wrapper);
+  })
+
+  show.click(function() {
+    var wrapper = $(this).parent();
+    showText(wrapper); 
+  });  
+
+ edit.click(function() {
+  var wrapper = $(this).parent();
+    $("#edit-form input[name=name-edit]").val(wrapper.find('h1').text())
+    $( "#edit-form input[name=author-edit]").val(wrapper.find('h2').text());
+    $( "#edit-form textarea[name=text-edit]").val(wrapper.find('div').text());
+  });
+}
+
+
+
+//add new post
+
+$("#post-form").submit(function(event){
+  event.preventDefault();
+  var data = {
+      name: $("#post-form input[name=name]").val(),
+      author:  $("#post-form input[name=author]").val(),
+      text: $("#post-form textarea[name=text]").val(),
+      date: new Date().toLocaleString()  
+    }
+ $.ajax({ 
+    url: "/api/topic/",
+    data: data,
+    type: "POST" 
+  })
+
+  .done(function() {
+    create(data);
+    $("#post-form input[name=name]").val("");
+    $("#post-form input[name=author]").val("");
+    $("#post-form textarea[name=text]").val("");
+  })
+
+  .fail(function( xhr, status, errorThrown ) {
+    alert( "Sorry, there was a problem!" );
+    console.log( "Error: " + errorThrown );
+    console.log( "Status: " + status );
+    console.dir( xhr );
+  })
+});
+
+
+
+
+
+</script>
+</body>
+</html>
