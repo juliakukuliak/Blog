@@ -13,24 +13,24 @@
       <div>
         <input type="submit" value="Submit" />
       </div>
+      <button type="button" onclick="Auth()">Sign in</button>
     </form>
-
-    <script type="text/javascript">
-//       function show(wrapper) {
-//         var data = {
-//           login: "login",
-//           password: "password"
-//         };
-//    $.ajax({
-//       url: "/api/user/auth",
-//       type: "POST",
-//       data: data
+  <script type="text/javascript">
+  function Auth() {
+    var data = {
+      "username": "John",
+      "password": "john123"
+    };
+   $.ajax({
+      url: "/api/auth/auth",
+      type: "POST",
+      data: data
      
-//     })
-//     .done(function(json) {
-//       console.log("Done");
-//     })
-// }
-    </script>
-  </body>
+    })
+    .done(function(json) {
+      console.log("Done");
+    })
+  }
+  </script>
+</body>
 </html>

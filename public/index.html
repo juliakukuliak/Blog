@@ -74,33 +74,19 @@ function showText(wrapper) {
 
 // delete post
 
-// function deletePost(param) {
-//   $.ajax({
-//       url: "/api/topic/" + param.find(':first-child').text(),
-//       type: "DELETE",  
-//   })
-//   .done(function( json ) {
-//     param.remove();
-//   })
-//   .fail(function( xhr, status, errorThrown ) {
-//       console.dir( xhr );
-//   })
-// }
-      function deletePost(wrapper) {
-        var data = {
-          "username": "John",
-          "password": "john123"
-        };
-   $.ajax({
-      url: "/api/auth/auth",
-      type: "POST",
-      data: data,
-     
-    })
-    .done(function(json) {
-      console.log("Done");
-    })
+function deletePost(param) {
+  $.ajax({
+      url: "/api/topic/" + param.find(':first-child').text(),
+      type: "DELETE",  
+  })
+  .done(function( json ) {
+    param.remove();
+  })
+  .fail(function( xhr, status, errorThrown ) {
+      console.dir( xhr );
+  })
 }
+
 
 
 
