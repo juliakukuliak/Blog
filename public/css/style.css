@@ -42,7 +42,7 @@ h4 {
 }
 .form-area {
 	float: left;
-	margin-right: 120px;
+	margin-right: 60px;
 	padding: 30px;
 	background:radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 100%); 
 	box-shadow: -1px 3px 29px 0px rgba(0,0,0,1);
@@ -71,7 +71,7 @@ textarea {
 	letter-spacing: 2px;
 }
 .posts {
-	width: 55%;
+	width: 45%;
 	display: inline-block;
 	text-align: left;
 }

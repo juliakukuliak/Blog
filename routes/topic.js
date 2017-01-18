@@ -35,6 +35,7 @@ router
             return el.name !== req.params.name
         });
         topics.push(new Topic(body.name, body.author, body.text, body.date));
+        res.send(200);
     })
     .delete('/:name', function (req, res, next) {
         var name = req.params.name;

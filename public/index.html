@@ -12,20 +12,13 @@
   <h4>Your post</h4>
   <hr>
   <form action="/" method="post" id="post-form" class="post-form">
-    <input type="text" name="name" placeholder="name"><br>
-    <input type="text" name="author" placeholder="author"><br>
+    <input type="text" name="name" placeholder="name" class="inp"><br>
+    <input type="text" name="author" placeholder="author" class="inp"><br>
     <textarea name="text" placeholder="text"></textarea><br>
     <button type="submit" id="on" class="save-btn">Save post</button>
   </form>
   </div>
   <div class="posts"></div>
-
-<!-- <form action="/" method="post" id="edit-form">
-   <div><input type="text" name="name-edit" placeholder="name"></div>
-   <div><input type="text" name="author-edit" placeholder="author"></div>
-    <div><textarea name="text-edit" placeholder="text"></textarea></div>
-    <button type="submit" id="om">Save</button>
-</form> -->
 </div>
 <script>
 // Show all posts
@@ -65,35 +58,6 @@ function runRequestNativeWay() {
     xhttp.send();
 }
 
-//update posts
-//  $("#edit-form").submit(function(event){
-//     event.preventDefault();  
-//     var data = {
-//       name: $("#edit-form input[name=name-edit]").val(),
-//       author:  $("#edit-form input[name=author-edit]").val(),   
-//       text: $("#edit-form textarea[name=text-edit]").val(),
-//       date: "new Date"
-//       }
-//     $.ajax({
-//         url: "/api/topic/" + "AJAX",
-//         data: JSON.stringify(data),
-//         type: "PUT",
-//         contentType: "application/json; charset=utf-8",
-//         dataType : "json"
-//     })
-//     .done(function( json ) {
-//       console.log(json);
-//     })
-//     .fail(function( xhr, status, errorThrown ) {
-//       console.log( "Error: " + errorThrown );
-//       console.log( "Status: " + status );
-//       console.log("err");
-//       console.dir( xhr );
-//     })
-
-// });
-
-
 //show text
 
 function showText(wrapper) {
@@ -110,47 +74,121 @@ function showText(wrapper) {
 
 // delete post
 
-function deletePost(param) {
-  $.ajax({
-      url: "/api/topic/" + param.find(':first-child').text(),
-      type: "DELETE",  
-  })
-  .done(function( json ) {
-    param.remove();
-  })
-  .fail(function( xhr, status, errorThrown ) {
-      console.dir( xhr );
-  })
+// function deletePost(param) {
+//   $.ajax({
+//       url: "/api/topic/" + param.find(':first-child').text(),
+//       type: "DELETE",  
+//   })
+//   .done(function( json ) {
+//     param.remove();
+//   })
+//   .fail(function( xhr, status, errorThrown ) {
+//       console.dir( xhr );
+//   })
+// }
+      function deletePost(wrapper) {
+        var data = {
+          "username": "John",
+          "password": "john123"
+        };
+   $.ajax({
+      url: "/api/auth/auth",
+      type: "POST",
+      data: data,
+     
+    })
+    .done(function(json) {
+      console.log("Done");
+    })
 }
+
+
+
 // create new post
+
 function create(post) {
+  //Posts
   var wrapp = $("<div>").appendTo($(".posts"));
   var name = $("<h1>").text(post.name).appendTo(wrapp);
   var author = $("<h2>").text(post.author).appendTo(wrapp);
   var date = $("<h3>").text(post.date).appendTo(wrapp);
+  //Buttons
   var show = $("<button type=\"button\">").text("Show more...").appendTo(wrapp);
-  var edit = $("<button type=\"button\">").text("Edit").appendTo(wrapp);
+ 
   var del = $("<button type=\"button\">").text("Delete").appendTo(wrapp);
+   var edit = $("<button type=\"button\">").text("Edit").appendTo(wrapp);
+  //Form
+  var form = $("<form action=\"/\" id=\"edit-form\" method=\"post\">").appendTo(wrapp);
+  var inputName =  $("<input type=\"text\" name=\"name-edit\">").appendTo(form);
+  var inputAuthor =  $("<input type=\"text\" name=\"author-edit\">").appendTo(form);
+  var textarea =  $("<textarea name=\"text-edit\">").appendTo(form);
+  var submitButt = $("<button type=\"submit\">").text("Submit").appendTo(form);
+  form.hide();
+  edit.hide()
+
 
   del.click(function() {
-     var wrapper = $(this).parent();
-     deletePost(wrapper);
+     deletePost(wrapp);
   })
 
   show.click(function() {
-    var wrapper = $(this).parent();
-    showText(wrapper); 
+    showText(wrapp);
+    edit.show(); 
   });  
 
+
  edit.click(function() {
-  var wrapper = $(this).parent();
-    $("#edit-form input[name=name-edit]").val(wrapper.find('h1').text())
-    $( "#edit-form input[name=author-edit]").val(wrapper.find('h2').text());
-    $( "#edit-form textarea[name=text-edit]").val(wrapper.find('div').text());
+    inputName.val(wrapp.find('h1').text())
+    inputAuthor.val(wrapp.find('h2').text());
+    textarea.val(wrapp.find('div').text());
+    form.show();
+  });
+
+ form.submit(function(event){
+
+  event.preventDefault();
+  var a = $(this).parent();
+  updatePost(a);
   });
 }
 
 
+//update posts
+
+function updatePost(wrapp) {
+  // var data = {
+  //   name: $("#edit-form input[name=name-edit]").val(),
+  //   author:  $("#edit-form input[name=author-edit]").val(),   
+  //   text: $("#edit-form textarea[name=text-edit]").val(),
+  //   date: new Date().toLocaleString()
+  // }
+
+  var data = {
+    name: wrapp.find("#edit-form input[name=name-edit]").val(),
+    author: wrapp.find("#edit-form input[name=author-edit]").val(),
+    text: wrapp.find("#edit-form textarea[name=text-edit]").val(),
+    date: new Date().toLocaleString()
+  }
+
+  console.log(data);
+  $.ajax({
+      url: "/api/topic/" + wrapp.find(':first-child').text(),
+      data: data,
+      type: "PUT"
+  })
+  .done(function() {
+    wrapp.find('h1').text(data.name);
+    wrapp.find('h2').text(data.author);
+    wrapp.find('h3').text(data.date);
+    wrapp.find('div').text(data.text);
+  })
+  .fail(function( xhr, status, errorThrown ) {
+    console.log( "Error: " + errorThrown );
+    console.log( "Status: " + status );
+    console.log("err");
+    console.dir( xhr );
+  })
+}
 
 //add new post
 
