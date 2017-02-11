@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var topic = require('./routes/topic');
 var auth = require('./routes/auth');
+var comments = require('./routes/comments');
 
 var otherApi = require('./routes/api');
 var passport = require('passport');
@@ -22,7 +23,7 @@ var app = express();
 //   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 // }))
 app.get('/login', function(req, res) {
-  res.sendfile('public/login.html');
+  res.sendfile('public/templates/login.html');
 });
 console.log("Server Started");
 
@@ -47,6 +48,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api/topic', topic);
 app.use('/api/auth', auth);
+app.use('/api/comments', comments);
 app.use('/api', otherApi);
 
 // catch 404 and forward to error handler

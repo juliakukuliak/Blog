@@ -1,18 +1,20 @@
-
-
-function User(username, password, id ) {
-    this.username = username;
-    this.password = password;
-    this.id = id;
+function User(name, username, password, email) {
+	this.name = name;
+  this.username = username;
+  this.password = password;
+  this.id = Date.now();
+  this.email = email;
     
 }
 
 User.prototype.getSimpleModel = function () {
-    return {
-        username: this.username,
-        password: this.password,
-        id: this.id
-    }
+  return {
+  	name: this.name,
+      username: this.username,
+      password: this.password,
+      email: this.email,
+      id: this.id
+  }
 };
 
 module.exports = User;

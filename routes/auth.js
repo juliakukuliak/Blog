@@ -8,31 +8,30 @@ var fs = require('fs');
 var express = require('express');
 var LocalStrategy = require('passport-local').Strategy;
 
-passport.use(new LocalStrategy(
-  
+passport.use(new LocalStrategy( 
     function (username, password, done) {
-      var topic = User.find(function (elem) {
-            return elem.username == username;
+      var user = users.find(function (elem) {
+            return elem.username == username && elem.password === password;
         });
+      if (user) {
+        return done(null, user);
+      } else {
+        return done(null, false, {message: "Incorrect password"});
+      }
 
-      console.log(topic);
+      
     }
 ));
 
 passport.serializeUser(function (user, done) {
-    done(null, user && user._id);
+    done(null, user && user.id);
 });
 
 passport.deserializeUser(function (id, done) {
-    User.find({
-        _id: id
-    }, '-password', function(err, user){
-        if(err) {
-            console.error(err);
-            return done(err);
-        }
-        done(null, user);
+    var user = users.find(function (elem) {
+        return elem.username == username && elem.password === password;
     });
+    done(null, user);
 });
 
 router.post('/login', function(req, res, next) {
@@ -61,6 +60,36 @@ router.post('/login', function(req, res, next) {
             });
         });
     })(req, res, next);
+});
+
+
+router.post('/registration', function(req, res, next) {
+  var newUser = new User(req.body.name, req.body.username, req.body.password, req.body.email);
+ if (req.body.username && req.body.email) {
+      var username = req.body.username;
+      var email = req.body.email;
+     
+      var user = users.find(function(u) {
+        return u.username === username || u.email === email;
+      });
+      if (!user) {
+        users.push(newUser);
+        req.logIn(newUser, function(err) {
+          if (err) return next(err);
+          res.json({
+                success: true,
+                data: {
+                    message: 'Authentication succeeded',
+                    user: newUser
+                }
+            });
+        });
+      } else {
+        console.log("User is already exist"); 
+        res.send(401);
+      }
+  }
+
 });
 
 router.get('/logout', function(req, res){
