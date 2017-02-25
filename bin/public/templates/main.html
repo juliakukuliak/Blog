@@ -1,0 +1,12 @@
+<div ng-controller="PostsController">
+  <div ng-if="current_user">
+     <div class="row">
+      <div class="col-md-6 col-md-offset-3"><create></create></div>
+      </div>
+  </div>
+  <div ng-if="editMode">
+    <div class="row">
+    <div class="col-md-6 col-md-offset-3"><edit></edit></div>
+    </div>
+  </div>
+  <posts></posts> 

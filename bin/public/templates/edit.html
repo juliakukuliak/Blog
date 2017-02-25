@@ -1,4 +1,4 @@
- <div class="panel panel-login">
+ <div ng-if="current_user" class="panel panel-login">
   <div class="panel-heading">
     <div class="row">
       <div class="col-xs-12">
@@ -15,7 +15,7 @@
             <input type="text" name="name" ng-model="newposts.name" class="form-control" placeholder="Title" required>
           </div>
           <div class="form-group">
-            <textarea name="text" class="form-control" rows="20" ng-model="newposts.text" required /></textarea>
+            <textarea name="text" class="form-control" ng-model="newposts.text" required /></textarea>
           </div>
           <div class="form-group">
             <div class="row">

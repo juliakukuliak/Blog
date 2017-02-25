@@ -1,0 +1,14 @@
+
+
+
+<div class="container">
+<div class="col-lg-8" ng-repeat="posts in post">
+    <h1>{{posts.name}}</h1>
+    <p>{{posts.text}}</p>
+    <div>
+		<span class="badge">Posted {{posts.date }}  </span> by <span class="label label-default">{{posts.author}}</span>
+		<div class="pull-right"> <button ng-if="current_user" ng-click="edit()" class="btn btn-primary">Edit</button>  <button ng-if="current_user" ng-click="delete($index)" class="btn btn-danger">x</button></div>         
+     </div>
+    <hr>
+    </div>     
+</div>

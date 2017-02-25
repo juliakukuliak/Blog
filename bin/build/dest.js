@@ -1,25 +1,13 @@
-var posts = angular.module('posts', [
-    "ngRoute"
-]);
-posts.config(function($routeProvider){
-$routeProvider
-   .when('/posts',
-    {
-        template: "<maincontainer></maincontainer>"
-    })
-    .when('/details/:name',
-    {
-    template: "<postdetails></postdetailsc>"
-           
-    })
-                
-    .when('/login',
-    {
-        template: "<login></login>"
-    })
-});
-
-posts.controller('PostsController', function($scope, $http, $rootScope) {
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var posts = angular.module('posts', []);
+// posts.config(function($routeProvider){
+//         $routeProvider.when('/posts',
+//         {
+//             templateUrl:'public/post-details.html',
+//             controller:'PostsController'
+//         });
+// });
+ posts.controller('PostsController', function($rootScope, $scope, $http) {
  	$rootScope.editMode = false;
  	var serviceBase = '/api/topic/';
  	
@@ -67,6 +55,7 @@ posts.controller('PostsController', function($scope, $http, $rootScope) {
 		 	$rootScope.editMode = false; 
 		 }
     };
+
  });
 
 posts.directive('posts', function() {
@@ -96,28 +85,10 @@ posts.directive('edit', function() {
     templateUrl: 'edit.html'
   };
 });
-posts.directive('navbar', function() {
-  return {
-    restrict: 'E',
-    templateUrl: 'navbar.html'
-  };
-});
 
-posts.directive('maincontainer', function() {
-  return {
-    restrict: 'E',
-    templateUrl: 'main.html'
-  };
-});
 
-posts.directive('postdetails', function() {
-  return {
-    restrict: 'E',
-    templateUrl: 'postdetails.html'
-  };
-});
 
-posts.controller('AuthController', function($scope, $http, $rootScope,  $location) {
+posts.controller('AuthController', function($scope, $http, $rootScope) {
 		let serviceBase = '/api/auth/';
      $scope.auth = function() {
     	$http.post('/api/auth/login', {'username': $scope.username, 'password': $scope.password}).then(function (results) {	
@@ -133,11 +104,12 @@ posts.controller('AuthController', function($scope, $http, $rootScope,  $locatio
 
     $scope.register = function() {
     	$http.post('/api/auth/registration', {'name': $scope.newName, 'username': $scope.newUsername, 'password': $scope.newPassword, 'email': $scope.newEmail}).then(function (results) {	
+        console.log(results);
         if (results.data.success) {
         	 $scope.user = "Hello, " + $scope.newUsername + "!";
         	 $rootScope.current_user = $scope.newUsername;
         }
-        $location.path( '/posts' );
+        
         return results;
    		 }); 
     };
@@ -153,13 +125,24 @@ posts.controller('AuthController', function($scope, $http, $rootScope,  $locatio
     
 });
 
-posts.controller('DetailsCtrl', function($scope, $http, $rootScope,  $location) {
-    let serviceBase = '/api/topic/';
-    $scope.funk = function(item) {
-      $http.get(serviceBase + item).then(function (results) {
-        $rootScope.postDetail = results.data;  
-    });   
-    };     
+
+},{}]},{},[1])
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+$(function() {
+
+    $('#login-form-link').click(function(e) {
+    $("#login-form").delay(100).fadeIn(100);
+    $("#register-form").fadeOut(100);
+    $('#register-form-link').removeClass('active');
+    $(this).addClass('active');
+    e.preventDefault();
+  });
+  $('#register-form-link').click(function(e) {
+    $("#register-form").delay(100).fadeIn(100);
+    $("#login-form").fadeOut(100);
+    $('#login-form-link').removeClass('active');
+    $(this).addClass('active');
+    e.preventDefault();
+  });
 });
-
-
+},{}]},{},[1])

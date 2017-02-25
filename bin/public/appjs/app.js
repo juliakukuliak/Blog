@@ -1,29 +1,16 @@
-var posts = angular.module('posts', [
-    "ngRoute"
-]);
-posts.config(function($routeProvider){
-$routeProvider
-   .when('/posts',
-    {
-        template: "<maincontainer></maincontainer>"
-    })
-    .when('/details/:name',
-    {
-    template: "<postdetails></postdetailsc>"
-           
-    })
-                
-    .when('/login',
-    {
-        template: "<login></login>"
-    })
-});
-
-posts.controller('PostsController', function($scope, $http, $rootScope) {
+var posts = angular.module('posts', []);
+// posts.config(function($routeProvider){
+//         $routeProvider.when('/posts',
+//         {
+//             templateUrl:'public/post-details.html',
+//             controller:'PostsController'
+//         });
+// });
+posts.controller('PostsController', function($rootScope, $scope, $http) {
  	$rootScope.editMode = false;
  	var serviceBase = '/api/topic/';
  	
-   $http.get("topics.json")
+   $http.get("../topics.json")
   	.then(function(response){
   	$scope.post = response.data.topics;
   	
@@ -67,64 +54,45 @@ posts.controller('PostsController', function($scope, $http, $rootScope) {
 		 	$rootScope.editMode = false; 
 		 }
     };
+
  });
 
 posts.directive('posts', function() {
   return {
   	restrict: 'E',
-    templateUrl: 'posts.html'
+    templateUrl: '../templates/posts.html'
   };
 });
 
 posts.directive('login', function() {
   return {
   	restrict: 'E',
-    templateUrl: 'login.html'
+    templateUrl: '../templates/login.html'
   };
 });
 
 posts.directive('create', function() {
   return {
   	restrict: 'E',
-    templateUrl: 'create.html'
+    templateUrl: '../templates/create.html'
   };
 });
 
 posts.directive('edit', function() {
   return {
   	restrict: 'E',
-    templateUrl: 'edit.html'
-  };
-});
-posts.directive('navbar', function() {
-  return {
-    restrict: 'E',
-    templateUrl: 'navbar.html'
+    templateUrl: '../templates/edit.html'
   };
 });
 
-posts.directive('maincontainer', function() {
-  return {
-    restrict: 'E',
-    templateUrl: 'main.html'
-  };
-});
-
-posts.directive('postdetails', function() {
-  return {
-    restrict: 'E',
-    templateUrl: 'postdetails.html'
-  };
-});
-
-posts.controller('AuthController', function($scope, $http, $rootScope,  $location) {
-		let serviceBase = '/api/auth/';
+posts.controller('AuthController', function($scope, $http, $rootScope) {
+    let serviceBase = '/api/auth/';
      $scope.auth = function() {
-    	$http.post('/api/auth/login', {'username': $scope.username, 'password': $scope.password}).then(function (results) {	
+      $http.post('/api/auth/login', {'username': $scope.username, 'password': $scope.password}).then(function (results) { 
         console.log(results);
         if (results.data.success) {
-        	 $scope.user = "Hello, " + $scope.username + "!";
-        	 $rootScope.current_user = $scope.username;
+           $scope.user = "Hello, " + $scope.username + "!";
+           $rootScope.current_user = $scope.username;
         }
         return results;
     }); 
@@ -132,34 +100,25 @@ posts.controller('AuthController', function($scope, $http, $rootScope,  $locatio
     };
 
     $scope.register = function() {
-    	$http.post('/api/auth/registration', {'name': $scope.newName, 'username': $scope.newUsername, 'password': $scope.newPassword, 'email': $scope.newEmail}).then(function (results) {	
+      $http.post('/api/auth/registration', {'name': $scope.newName, 'username': $scope.newUsername, 'password': $scope.newPassword, 'email': $scope.newEmail}).then(function (results) {  
+        console.log(results);
         if (results.data.success) {
-        	 $scope.user = "Hello, " + $scope.newUsername + "!";
-        	 $rootScope.current_user = $scope.newUsername;
+           $scope.user = "Hello, " + $scope.newUsername + "!";
+           $rootScope.current_user = $scope.newUsername;
         }
-        $location.path( '/posts' );
+        
         return results;
-   		 }); 
+       }); 
     };
 
     $scope.logout = function() {
-    	$http.get('/api/auth/logout').then(function (results) {	
+      $http.get('/api/auth/logout').then(function (results) { 
         $rootScope.current_user = ''; 
 
        return results;
-    	}); 
+      }); 
     }
 
     
 });
-
-posts.controller('DetailsCtrl', function($scope, $http, $rootScope,  $location) {
-    let serviceBase = '/api/topic/';
-    $scope.funk = function(item) {
-      $http.get(serviceBase + item).then(function (results) {
-        $rootScope.postDetail = results.data;  
-    });   
-    };     
-});
-
 

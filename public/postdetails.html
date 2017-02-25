@@ -1,0 +1,14 @@
+<div class="container" ng-controller="DetailsCtrl">
+<div class="col-lg-8">
+    <h1>{{postDetail.name}}</h1>
+    <hr>
+    <img ng-src="{{postDetail.img}}" style="width: 700px; height: 500px">
+    <hr>
+    <p>{{postDetail.text}}</p>
+    <div>
+	<span class="badge">Posted {{postDetail.date }}  </span> by <span class="label label-default">{{postDetail.author}}</span>
+	<div class="pull-right"><a  ng-href="/#!/posts/" class="btn btn-danger" ng-if="current_user">Back</a></div>	         
+     </div>
+    <hr>
+    </div>     
+</div>
